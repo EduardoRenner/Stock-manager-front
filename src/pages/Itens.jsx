@@ -102,7 +102,11 @@ function Itens() {
           <td>{item.nome}</td>
           <td>{item.marca}</td>
           <td>{item.quantidade}</td>
-          <td>{item.dataValidade}</td>
+          {item.dataValidade === null ? (
+            <td>Sem validade</td>
+          ) : (
+            <td>{item.dataValidade}</td>
+          )}
           <td>
             <button onClick={() => handleUpdate(item)}>✏️</button>
             <button onClick={() => handleDelete(item.id)}>🗑️</button>
