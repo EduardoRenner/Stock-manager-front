@@ -22,21 +22,12 @@ function Movimentacoes() {
     }, [])
 
   const handleHistorico = (movimentacao) => {
-
-    const corpo = {
-    item: { id: Number(movimentacao.item) },
-    quantidade: Number(movimentacao.quantidade),
-    tipo: movimentacao.tipo.toUpperCase()
-    }
-
-    console.log(movimentacao);
     fetch(`http://localhost:8080/movimentacoes/${movimentacao.item}`)
-    .then(res => res.json())
-    .then(data => {
-      console.log(data);
-      setMovimentacoes(data);
-    })
-    .catch(error => console.error("Erro ao buscar histórico:", error));
+      .then(res => res.json())
+      .then(data => {
+        setMovimentacoes(data);
+      })
+      .catch(error => console.error("Erro ao buscar histórico:", error));
   };
 
   const handleSalvarMovimentacao = (e) => {
@@ -68,64 +59,72 @@ function Movimentacoes() {
       alert(mensagem);
       window.location.reload();
     })
-      .catch(error => console.error("Erro ao registrar movimentação:", error));
+    .catch(error => console.error("Erro ao registrar movimentação:", error));
   };
-
+  
   return ( 
     <> 
-    <h1>Página de Movimentações</h1>
-    <select
-      name="item"
-      value={movimentacao.item}
-      onChange={(e) => setMovimentacao({ ...movimentacao, item: e.target.value })}
+    <div className="p-1 bg-white rounded-lg shadow p-1 mt-1 flex flex-col gap-3">
+      <h1 className="text-2xl text-center py-6">Página de Movimentações</h1>
+      <select className="border border-gray-300 rounded px-3 py-2 w-full outline-none focus:border-blue-500"
+        name="item"
+        value={movimentacao.item}
+        onChange={(e) => setMovimentacao({ ...movimentacao, item: e.target.value })}
       >
-    <option value="">Selecione um item para movimentar</option>
-    {itens.map(item => (
-      <option key={item.id} value={item.id}>{item.nome}</option>
-    ))}
-  </select>
-  <input
-    name="quantidade"
-    value={movimentacao.quantidade}
-    onChange={(e) => setMovimentacao({...movimentacao, quantidade: e.target.value})}
-    placeholder={itemSelecionado ? 'Quantidade disponível: ' + itemSelecionado.quantidade : 'Digite a quantidade'}
-    />
-  <select
-    name="tipo"
-    value={movimentacao.tipo}
-    onChange={(e) => setMovimentacao({...movimentacao, tipo: e.target.value})}
-  >
-    <option value="">Selecione o tipo de movimentação</option>
-    <option value="ENTRADA">Entrada</option>
-    <option value="SAIDA">Saída</option>
-  </select>
-  <button onClick={handleSalvarMovimentacao}>Salvar movimentação</button>
-  <button onClick={() => handleHistorico(movimentacao)}>Ver histórico</button>
-  {movimentacoes.length > 0 && (
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Item</th>
-          <th>Quantidade</th>
-          <th>Tipo</th>
-          <th>Data e horário</th>
-        </tr>
-      </thead>
-      <tbody>
-        {movimentacoes.map(mov => (
-          <tr key={mov.id}>
-            <td>{mov.id}</td>
-            <td>{mov.item.nome}</td>
-            <td>{mov.quantidade}</td>
-            <td>{mov.tipo}</td>
-            <td>{new Date(mov.dataHora).toLocaleString()}</td>
-          </tr>
+        <option className="hover:bg-gray-300" value="">Selecione um item para movimentar</option>
+        {itens.map(item => (
+        <option className="hover:bg-gray-300" key={item.id} value={item.id}>{item.nome}</option>
         ))}
-      </tbody>
-    </table>
-  )}
-  </>
+      </select>
+      <input className="border border-gray-300 rounded px-3 py-2 w-full outline-none focus:border-blue-500"
+        name="quantidade"
+        value={movimentacao.quantidade}
+        onChange={(e) => setMovimentacao({...movimentacao, quantidade: e.target.value})}
+        placeholder={itemSelecionado ? 'Quantidade disponível: ' + itemSelecionado.quantidade : 'Digite a quantidade'}
+      />
+      <select className="border border-gray-300 rounded px-3 py-2 w-full outline-none focus:border-blue-500"
+        name="tipo"
+        value={movimentacao.tipo}
+        onChange={(e) => setMovimentacao({...movimentacao, tipo: e.target.value})}
+      >
+        <option value="">Selecione o tipo de movimentação</option>
+        <option value="ENTRADA">Entrada</option>
+        <option value="SAIDA">Saída</option>
+      </select>
+      <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" onClick={handleSalvarMovimentacao}>
+      Salvar movimentação
+      </button>
+      <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" onClick={() => handleHistorico(movimentacao)}>
+      Ver histórico
+      </button>
+    </div>
+    {movimentacoes.length > 0 && (
+      <div className="p-6">
+        <table className="w-full border-collapse bg-white rounded-lg shadow">
+          <thead className="bg-gray-800 text-white">
+            <tr>
+              <th className="text-left px-4 py-3">ID</th>
+              <th className="text-left px-4 py-3">Item</th>
+              <th className="text-left px-4 py-3">Quantidade</th>
+              <th className="text-left px-4 py-3">Tipo</th>
+              <th className="text-left px-4 py-3">Data e horário</th>
+            </tr>
+          </thead>
+          <tbody>
+            {movimentacoes.map(mov => (
+              <tr key={mov.id} className="border-b border-gray-200 hover:bg-gray-50">
+                <td className="px-4 py-3">{mov.id}</td>
+                <td className="px-4 py-3">{mov.item.nome}</td>
+                <td className="px-4 py-3">{mov.quantidade}</td>
+                <td className="px-4 py-3">{mov.tipo}</td>
+                <td className="px-4 py-3">{new Date(mov.dataHora).toLocaleString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )}
+    </>
   )
 }
 
